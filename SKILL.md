@@ -384,19 +384,53 @@ Process:
 - Max 10-12 nodes per diagram
 - Break complex diagrams into multiple views
 
-### 4. Use Consistent Styling
+### 4. Use Consistent Styling with High Contrast
+
+**CRITICAL**: All Mermaid diagrams MUST use high-contrast colors for accessibility and readability.
+
+**Contrast Rules**:
+- **Light backgrounds** → **Dark text colors**
+- **Dark backgrounds** → **Light text colors**
+- Never use light text on light backgrounds or dark text on dark backgrounds
+
+✅ **Good - High Contrast Examples**:
 
 ```mermaid
 graph TB
-    %% Define style classes
-    classDef primaryService fill:#90EE90
-    classDef secondaryService fill:#FFD700
-    classDef database fill:#87CEEB
+    %% Define style classes with explicit text colors
+    classDef primaryService fill:#90EE90,stroke:#333,stroke-width:2px,color:darkgreen
+    classDef secondaryService fill:#FFD700,stroke:#333,stroke-width:2px,color:black
+    classDef database fill:#87CEEB,stroke:#333,stroke-width:2px,color:darkblue
+    classDef errorStyle fill:#FFB6C1,stroke:#DC143C,stroke-width:3px,color:black
+    classDef successStyle fill:#90EE90,stroke:#2E7D2E,stroke-width:3px,color:darkgreen
 
     ServiceA:::primaryService
     ServiceB:::secondaryService
     DB[(Database)]:::database
 ```
+
+❌ **Bad - Poor Contrast**:
+
+```mermaid
+graph TB
+    %% Missing color property - may have poor contrast
+    classDef badStyle fill:#F0F0F0,stroke:#E0E0E0  %% Light on light!
+    classDef alsoBad fill:#333333,stroke:#222222   %% May have dark on dark!
+```
+
+**Common High-Contrast Color Combinations**:
+
+| Background Fill | Text Color | Use Case |
+|-----------------|------------|----------|
+| `#90EE90` (light green) | `color:darkgreen` | Success states, primary services |
+| `#FFD700` (gold) | `color:black` | Warning states, secondary services |
+| `#87CEEB` (sky blue) | `color:darkblue` | Info states, databases |
+| `#FFB6C1` (pink) | `color:black` | Error states |
+| `#FFE4B5` (peach) | `color:black` | Public resources |
+| `#E6E6FA` (lavender) | `color:darkblue` | Private resources, IAM |
+| `#F0F0F0` (light gray) | `color:black` | Neutral elements |
+| `#2C3E50` (dark blue) | `color:white` | Dark theme primary |
+| `#34495E` (dark gray) | `color:#ECF0F1` | Dark theme secondary |
 
 ### 5. Add Context with Notes
 
@@ -409,7 +443,25 @@ sequenceDiagram
     Server-->>Client: Response
 ```
 
-### 6. Document Decisions
+### 6. Ensure Accessibility with High-Contrast Colors
+
+**MANDATORY for all classDef styles**:
+
+Every `classDef` statement MUST include a `color:` property with appropriate contrast:
+
+```mermaid
+%% ALWAYS include color: property
+classDef public fill:#FFE4B5,stroke:#333,stroke-width:2px,color:black     ✅ Correct
+classDef iam fill:#E6E6FA,stroke:#333,stroke-width:2px,color:darkblue     ✅ Correct
+
+classDef bad fill:#FFE4B5,stroke:#333,stroke-width:2px                    ❌ Missing color
+```
+
+**Quick test**: Can you easily read the text on the background color?
+- If **NO** → Adjust the `color:` value for better contrast
+- If **YES** → You're good to go
+
+### 7. Document Decisions
 
 Include ADRs (Architectural Decision Records) for key choices:
 - What was decided

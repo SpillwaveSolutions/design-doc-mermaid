@@ -408,7 +408,13 @@ graph TB
     API --> Database
 ```
 
-### Color Coding
+### Color Coding with High Contrast
+
+**CRITICAL**: All Mermaid diagram styles MUST use high-contrast colors for accessibility.
+
+**Rule**: Light backgrounds require dark text, dark backgrounds require light text.
+
+✅ **Correct - High Contrast**:
 
 ```mermaid
 graph LR
@@ -417,10 +423,54 @@ graph LR
     C[Warning]
     D[Error]
 
+    style A fill:#F0F0F0,stroke:#333,color:black
+    style B fill:#90EE90,stroke:#333,color:darkgreen
+    style C fill:#FFD700,stroke:#333,color:black
+    style D fill:#FF6B6B,stroke:#8B0000,color:white
+```
+
+**Using classDef (Recommended for consistency)**:
+
+```mermaid
+graph LR
+    A[Normal]
+    B[Success]
+    C[Warning]
+    D[Error]
+
+    classDef normalStyle fill:#F0F0F0,stroke:#333,stroke-width:2px,color:black
+    classDef successStyle fill:#90EE90,stroke:#2E7D2E,stroke-width:2px,color:darkgreen
+    classDef warningStyle fill:#FFD700,stroke:#B8860B,stroke-width:2px,color:black
+    classDef errorStyle fill:#FFB6C1,stroke:#DC143C,stroke-width:2px,color:black
+
+    class A normalStyle
+    class B successStyle
+    class C warningStyle
+    class D errorStyle
+```
+
+❌ **Incorrect - Poor Contrast**:
+
+```mermaid
+graph LR
+    %% Missing color property - may be unreadable
     style B fill:#90EE90
     style C fill:#FFD700
     style D fill:#FF6B6B
 ```
+
+**High-Contrast Color Palette**:
+
+| State | Background Fill | Text Color | Stroke |
+|-------|----------------|------------|--------|
+| Normal | `#F0F0F0` | `color:black` | `#333` |
+| Success | `#90EE90` | `color:darkgreen` | `#2E7D2E` |
+| Warning | `#FFD700` | `color:black` | `#B8860B` |
+| Error | `#FFB6C1` | `color:black` | `#DC143C` |
+| Info | `#87CEEB` | `color:darkblue` | `#4682B4` |
+| Public | `#FFE4B5` | `color:black` | `#FF8C00` |
+| Private | `#E6E6FA` | `color:darkblue` | `#8A2BE2` |
+| Dark | `#2C3E50` | `color:white` | `#34495E` |
 
 ### Link Styles
 
@@ -503,6 +553,44 @@ graph TB
     B --> note2
 ```
 
+### 6. CRITICAL - Ensure High-Contrast Accessibility
+
+**MANDATORY for ALL diagrams**:
+
+Every diagram with custom styling MUST use high-contrast colors:
+
+```mermaid
+graph LR
+    A[Component A]
+    B[Component B]
+    C[Component C]
+
+    classDef primary fill:#90EE90,stroke:#333,stroke-width:2px,color:darkgreen
+    classDef secondary fill:#FFD700,stroke:#333,stroke-width:2px,color:black
+    classDef accent fill:#87CEEB,stroke:#333,stroke-width:2px,color:darkblue
+
+    class A primary
+    class B secondary
+    class C accent
+```
+
+**Quick Accessibility Test**:
+1. Can you easily read the text on each background color?
+2. Would the diagram be readable if printed in grayscale?
+3. Does every `classDef` include a `color:` property?
+
+If answer is NO to any → Fix the contrast!
+
+**Common Mistakes to Avoid**:
+- ❌ `classDef myStyle fill:#FFD700` (missing `color:`)
+- ❌ `style A fill:#F0F0F0,color:#E0E0E0` (light on light)
+- ❌ `style B fill:#333,color:#222` (dark on dark)
+
+**Always Include**:
+- ✅ Explicit `color:` property in all `classDef` statements
+- ✅ Explicit `color:` property in all `style` statements
+- ✅ High-contrast combinations (see Color Coding section above)
+
 ---
 
 ## Syntax Validation Checklist
@@ -517,6 +605,9 @@ Before including a diagram, verify:
 - [ ] No trailing commas
 - [ ] Direction is specified (for flowcharts)
 - [ ] Date format matches (for Gantt)
+- [ ] **All `classDef` statements include `color:` property for high contrast**
+- [ ] **All `style` statements include `color:` property for high contrast**
+- [ ] **Text is readable on all background colors (accessibility test)**
 
 ---
 
