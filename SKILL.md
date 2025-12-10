@@ -108,6 +108,7 @@ flowchart TD
 |--------|---------|-----------|
 | `extract_mermaid.py` | Extract diagrams from Markdown, validate syntax, replace with images | "extract diagrams", "validate mermaid", "find all diagrams" |
 | `mermaid_to_image.py` | Convert .mmd to PNG/SVG, batch conversion, custom themes | "convert to image", "render diagram", "create PNG" |
+| `resilient_diagram.py` | Full workflow: save .mmd, generate image, validate, error recovery | "generate diagram", "create diagram with validation", "resilient diagram" |
 
 ## 🚀 Usage Patterns
 
@@ -173,6 +174,103 @@ flowchart TD
 3. Process all diagrams
 4. Apply default theme and transparent background
 5. Output success summary
+
+## 🛡️ Resilient Workflow (Primary Generation Method)
+
+**CRITICAL:** This is the recommended approach for ALL diagram generation. It ensures validation, error recovery, and consistent file organization.
+
+**Full Guide:** `references/guides/resilient-workflow.md`
+
+### Workflow Overview
+
+```mermaid
+flowchart LR
+    A[1. Identify Type] --> B[2. Save .mmd + Image]
+    B --> C{3. Valid?}
+    C -->|Yes| D[4. Add to Markdown]
+    C -->|No| E[5. Error Recovery]
+    E --> F{Fix Found?}
+    F -->|Yes| A
+    F -->|No| G[Search External]
+    G --> A
+
+    classDef step fill:#90EE90,stroke:#333,color:darkgreen
+    classDef decision fill:#FFD700,stroke:#333,color:black
+    class A,B,D,E,G step
+    class C,F decision
+```
+
+### Key Principle
+
+**NEVER add a diagram to markdown until it passes validation.** This prevents broken diagrams in documentation.
+
+### Using the Script (Recommended)
+
+```bash
+# Generate with full error recovery
+python scripts/resilient_diagram.py \
+    --code "flowchart TD; A-->B" \
+    --markdown-file design_doc \
+    --diagram-num 1 \
+    --title "process_flow" \
+    --format png \
+    --json
+```
+
+**Output:** Both `.mmd` and `.png` files in `./diagrams/` directory.
+
+### File Naming Convention
+
+```
+./diagrams/<markdown_file>_<num>_<type>_<title>.mmd
+./diagrams/<markdown_file>_<num>_<type>_<title>.png
+```
+
+**Example:** `./diagrams/api_design_01_sequence_auth_flow.png`
+
+### Error Recovery Priority
+
+When validation fails, the workflow automatically:
+
+1. **Check troubleshooting guide** - `references/guides/troubleshooting.md` (28 documented errors)
+2. **Search with perplexity** - `perplexity_ask` MCP for syntax questions
+3. **Search with brave** - `brave_web_search` MCP for recent solutions
+4. **Ask gemini** - `gemini` skill for alternative perspective
+5. **General search** - `WebSearch` tool as fallback
+
+### Manual Fallback Steps
+
+If the script is unavailable:
+
+1. **Identify diagram type** from first line (flowchart, sequence, etc.)
+2. **Load reference guide** from `references/guides/diagrams/`
+3. **Save to** `./diagrams/<markdown_file>_<num>_<type>_<title>.mmd`
+4. **Validate:** `mmdc -i file.mmd -o file.png -b transparent`
+5. **On error:** Search `references/guides/troubleshooting.md` for matching error
+6. **If not found:** Use search tools in priority order above
+7. **Add reference:** `![Description](./diagrams/filename.png)`
+
+### Pattern 6: Resilient Diagram Generation
+
+**User:** "Create a sequence diagram and add it to the design doc"
+
+**Skill Actions:**
+1. Identify intent: **diagram generation** + **markdown integration**
+2. Load workflow guide: `references/guides/resilient-workflow.md`
+3. Identify diagram type: **sequence**
+4. Load diagram guide: `references/guides/diagrams/sequence-diagrams.md`
+5. Generate Mermaid code using templates
+6. Execute resilient workflow:
+   ```bash
+   python scripts/resilient_diagram.py \
+       --code "[generated code]" \
+       --markdown-file design_doc \
+       --diagram-num 1 \
+       --title "api_sequence" \
+       --json
+   ```
+7. If validation fails → Apply troubleshooting fix → Retry
+8. On success → Add `![API Sequence](./diagrams/design_doc_01_sequence_api_sequence.png)` to markdown
 
 ## 🎨 Unicode Semantic Symbols
 
@@ -396,6 +494,7 @@ design-doc-mermaid/
 | "syntax error", "diagram won't render", "troubleshoot" | `references/guides/troubleshooting.md` |
 | "extract diagrams" | `scripts/extract_mermaid.py` |
 | "convert to image", "PNG", "SVG" | `scripts/mermaid_to_image.py` |
+| "create diagram", "generate diagram", "add diagram to markdown" | `scripts/resilient_diagram.py` + `references/guides/resilient-workflow.md` |
 | "design document", "full docs" | `assets/*-design-template.md` + diagram guides |
 
 ## 💡 Best Practices
