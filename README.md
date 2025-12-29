@@ -4,7 +4,41 @@
 
 A powerful Claude Code skill for creating Mermaid diagrams and design documents using on-demand guide loading, code-to-diagram generation, and Python utilities.
 
-## 🎯 What This Skill Does
+## Installation
+
+### One-Click Install via Skilz Marketplace
+
+Install this skill instantly from the [Skilz Marketplace](https://skillzwave.ai/skill/SpillwaveSolutions__design-doc-mermaid__design-doc-mermaid__SKILL/):
+
+```bash
+skilz install SpillwaveSolutions_design-doc-mermaid/design-doc-mermaid
+```
+
+### Manual Installation
+
+Clone directly into your Claude Code skills directory:
+
+```bash
+# Navigate to your skills directory
+cd ~/.claude/skills
+
+# Clone the repository
+git clone https://github.com/SpillwaveSolutions/design-doc-mermaid.git
+```
+
+### Verify Installation
+
+After installation, verify the skill is available:
+
+```bash
+# List installed skills
+ls ~/.claude/skills/design-doc-mermaid
+
+# Or ask Claude Code
+# "List my installed skills"
+```
+
+## What This Skill Does
 
 **Intelligent Diagram Generation:**
 - Activity diagrams (workflows, processes, business logic)
@@ -25,7 +59,7 @@ A powerful Claude Code skill for creating Mermaid diagrams and design documents 
 - Convert diagrams to PNG/SVG images
 - Batch process entire directories
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Create an Activity Diagram
 
@@ -65,7 +99,7 @@ The skill will:
 3. Generate complete document with embedded diagrams
 4. Save to `docs/design/api-contacts-v1-2025-01-13.md`
 
-## 📚 Structure
+## Structure
 
 ### Hierarchical Organization
 
@@ -109,7 +143,7 @@ mermaid-architect/
     └── system-design-template.md
 ```
 
-## 🎨 Key Features
+## Key Features
 
 ### 1. Unicode Semantic Symbols
 
@@ -175,7 +209,7 @@ python scripts/mermaid_to_image.py diagrams/ output/ \
 echo "graph TD; A-->B" | python scripts/mermaid_to_image.py - output.png
 ```
 
-## 🛠️ Requirements
+## Requirements
 
 ### For Diagram Generation
 - Claude Code skill system (automatic)
@@ -194,7 +228,7 @@ mmdc --version
 - Python 3.7+
 - No additional packages required (uses stdlib only)
 
-## 🎓 Learning Path
+## Learning Path
 
 ### New to Mermaid Diagrams?
 
@@ -220,7 +254,7 @@ mmdc --version
 5. **Use Symbols** - Enhance with Unicode symbols throughout
 6. **Save** - Place in `docs/design/` with timestamp
 
-## 🔄 How the Hierarchical System Works
+## How the Hierarchical System Works
 
 ### Traditional Approach (Inefficient)
 - Load entire skill documentation (~50KB)
@@ -251,7 +285,7 @@ mmdc --version
 
 **Tokens Used:** ~2,000 (vs ~10,000 with traditional approach)
 
-## 📊 Completion Status
+## Completion Status
 
 ✅ **Complete:**
 - Hierarchical decision tree orchestrator
@@ -276,7 +310,7 @@ mmdc --version
 - Node.js/Express examples
 - Java web app examples
 
-## 🤝 Contributing
+## Contributing
 
 To add a new diagram type guide:
 
@@ -301,19 +335,23 @@ To add a new language example:
    - Activity diagram from logic
 3. Update `SKILL.md` code-to-diagram table
 
-## 📜 License
+## License
 
 Part of Claude Code Skills - MIT License
 
-## 🔗 Related Skills
+## Related Skills
 
 - **confluence** - Upload diagrams to Confluence
 - **plantuml** - Alternative diagram format
+
+## Links
+
+- [GitHub Repository](https://github.com/SpillwaveSolutions/design-doc-mermaid)
+- [Skilz Marketplace Listing](https://skillzwave.ai/skill/SpillwaveSolutions__design-doc-mermaid__design-doc-mermaid__SKILL/)
+- [Mermaid Official Documentation](https://mermaid.js.org/)
 
 ---
 
 **Version:** 2.0.0
 **Updated:** 2025-01-13
-**Maintained by:** Claude Code Skills Team
-
-🚀 Ready to create amazing diagrams!
+**Maintained by:** SpillwaveSolutions
