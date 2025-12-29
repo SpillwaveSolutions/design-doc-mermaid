@@ -1,13 +1,29 @@
 ---
 name: design-doc-mermaid
-description: Create Mermaid diagrams for any purpose - activity diagrams, deployment diagrams, architecture diagrams, or complete design documents. This skill uses a hierarchical structure with specialized guides loaded on-demand based on user intent. Supports code-to-diagram generation, Unicode semantic symbols, and Python utilities for diagram extraction and image conversion.
+description: Create Mermaid diagrams (activity, deployment, sequence, architecture) from text descriptions or source code. Use when asked to "create a diagram", "generate mermaid", "document architecture", "code to diagram", "create design doc", or "convert code to diagram". Supports hierarchical on-demand guide loading, Unicode semantic symbols, and Python utilities for diagram extraction and image conversion.
 ---
 
-# Mermaid Architect - Hierarchical Diagram & Documentation Skill
+# Mermaid Architect - Hierarchical Diagram and Documentation Skill
 
-A comprehensive Mermaid diagram and documentation system with intelligent orchestration, specialized guides, and code-to-diagram capabilities.
+Mermaid diagram and documentation system with specialized guides and code-to-diagram capabilities.
 
-## 🎯 Decision Tree - Intelligent Guide Selection
+## Table of Contents
+
+- [Decision Tree](#decision-tree)
+- [Available Guides and Resources](#available-guides-and-resources)
+- [Usage Patterns](#usage-patterns)
+- [Resilient Workflow](#resilient-workflow)
+- [Unicode Semantic Symbols](#unicode-semantic-symbols)
+- [Python Utilities](#python-utilities)
+- [Decision Tree Examples](#decision-tree-examples)
+- [High-Contrast Styling](#high-contrast-styling)
+- [File Organization](#file-organization)
+- [Workflow Summary](#workflow-summary)
+- [When to Use What](#when-to-use-what)
+- [Best Practices](#best-practices)
+- [Learning Path](#learning-path)
+
+## Decision Tree
 
 **How this skill works:**
 
@@ -55,7 +71,7 @@ flowchart TD
     class Generate,Execute,RunValidation,Output action
 ```
 
-## 📚 Available Guides & Resources
+## Available Guides and Resources
 
 ### Diagram Type Guides (`references/guides/diagrams/`)
 
@@ -110,72 +126,19 @@ flowchart TD
 | `mermaid_to_image.py` | Convert .mmd to PNG/SVG, batch conversion, custom themes | "convert to image", "render diagram", "create PNG" |
 | `resilient_diagram.py` | Full workflow: save .mmd, generate image, validate, error recovery | "generate diagram", "create diagram with validation", "resilient diagram" |
 
-## 🚀 Usage Patterns
+## Usage Patterns
 
-### Pattern 1: Single Diagram Request
+Common request patterns and guide selection. See [When to Use What](#when-to-use-what) for complete mapping.
 
-**User:** "Create an activity diagram for the user login flow"
+| Pattern | Example Request | Guides to Load |
+|---------|-----------------|----------------|
+| Single Diagram | "Create activity diagram for login flow" | Diagram type guide + Unicode symbols |
+| Code-to-Diagram | "Generate deployment from application.yml" | Framework example + Deployment guide |
+| Design Document | "Create API design document" | Template from assets/ + Relevant diagram guides |
+| Extract/Validate | "Extract diagrams from design.md" | Use `scripts/extract_mermaid.py` |
+| Batch Convert | "Convert all .mmd to PNG" | Use `scripts/mermaid_to_image.py` |
 
-**Skill Actions:**
-1. Identify intent: **activity diagram** + **authentication workflow**
-2. Load guide: `references/guides/diagrams/activity-diagrams.md`
-3. Reference Unicode symbols: `references/guides/unicode-symbols/guide.md`
-4. Generate diagram using templates from guide
-5. Apply high-contrast styling
-6. Output complete Mermaid code
-
-### Pattern 2: Code-to-Diagram
-
-**User:** "Generate deployment diagram from my Spring Boot application.yml"
-
-**Skill Actions:**
-1. Identify intent: **deployment diagram** + **Spring Boot** + **configuration**
-2. Load guides:
-   - `references/guides/diagrams/deployment-diagrams.md`
-   - `examples/spring-boot/README.md`
-3. Analyze configuration (datasource, cache, security settings)
-4. Map config to infrastructure components
-5. Generate deployment diagram with Unicode symbols
-6. Include resource specifications
-
-### Pattern 3: Complete Design Document
-
-**User:** "Create an API design document for the contacts API"
-
-**Skill Actions:**
-1. Identify intent: **full design doc** + **API**
-2. Load template: `assets/api-design-template.md`
-3. Load diagram guides:
-   - Sequence diagrams (auth flow, CRUD operations)
-   - ER diagrams (data models)
-   - Architecture diagrams (API structure)
-4. Generate complete document with embedded diagrams
-5. Place in `docs/design/` with timestamp
-
-### Pattern 4: Extract and Validate
-
-**User:** "Extract all Mermaid diagrams from design.md and validate them"
-
-**Skill Actions:**
-1. Identify intent: **extract** + **validate**
-2. Use script: `scripts/extract_mermaid.py design.md --validate`
-3. Check mmdc is installed
-4. Extract all diagrams
-5. Validate each with mmdc
-6. Report results with line numbers
-
-### Pattern 5: Batch Image Conversion
-
-**User:** "Convert all .mmd files in diagrams/ to PNG images"
-
-**Skill Actions:**
-1. Identify intent: **convert** + **batch** + **PNG**
-2. Use script: `scripts/mermaid_to_image.py diagrams/ output/ --format png`
-3. Process all diagrams
-4. Apply default theme and transparent background
-5. Output success summary
-
-## 🛡️ Resilient Workflow (Primary Generation Method)
+## Resilient Workflow
 
 **CRITICAL:** This is the recommended approach for ALL diagram generation. It ensures validation, error recovery, and consistent file organization.
 
@@ -272,7 +235,7 @@ If the script is unavailable:
 7. If validation fails → Apply troubleshooting fix → Retry
 8. On success → Add `![API Sequence](./diagrams/design_doc_01_sequence_api_sequence.png)` to markdown
 
-## 🎨 Unicode Semantic Symbols
+## Unicode Semantic Symbols
 
 Always use Unicode symbols to enhance diagram clarity. Common patterns:
 
@@ -308,7 +271,7 @@ graph TB
 
 **For complete symbol reference, load:** `references/guides/unicode-symbols/guide.md`
 
-## 🔧 Python Utilities
+## Python Utilities
 
 ### Extract Mermaid Diagrams
 
@@ -344,7 +307,7 @@ python scripts/mermaid_to_image.py diagrams/ output/ --format png --recursive
 echo "graph TD; A-->B" | python scripts/mermaid_to_image.py - output.png
 ```
 
-## 📖 Decision Tree Examples
+## Decision Tree Examples
 
 ### Example 1: User Asks for Workflow Diagram
 
@@ -405,7 +368,7 @@ echo "graph TD; A-->B" | python scripts/mermaid_to_image.py - output.png
 
 **Output:** Complete GCP deployment diagram with all resources labeled.
 
-## 🎯 High-Contrast Styling (MANDATORY)
+## High-Contrast Styling
 
 **ALL diagrams MUST use high-contrast colors:**
 
@@ -424,7 +387,7 @@ graph TB
 - Dark background → Light text color
 - Always specify `color:` in every `classDef`
 
-## 📂 File Organization
+## File Organization
 
 ```
 design-doc-mermaid/
@@ -469,7 +432,7 @@ design-doc-mermaid/
     └── mermaid-diagram-guide.md     # Complete Mermaid syntax guide
 ```
 
-## 🔄 Workflow Summary
+## Workflow Summary
 
 1. **Analyze user intent** → Determine diagram type, document type, or action needed
 2. **Load appropriate guide(s)** → Read only what's needed (token efficient)
@@ -478,7 +441,7 @@ design-doc-mermaid/
 5. **Validate** (optional) → Use scripts to verify
 6. **Convert** (optional) → Export to images if needed
 
-## 🚦 When to Use What
+## When to Use What
 
 | User Request | Load This |
 |--------------|-----------|
@@ -497,7 +460,7 @@ design-doc-mermaid/
 | "create diagram", "generate diagram", "add diagram to markdown" | `scripts/resilient_diagram.py` + `references/guides/resilient-workflow.md` |
 | "design document", "full docs" | `assets/*-design-template.md` + diagram guides |
 
-## 💡 Best Practices
+## Best Practices
 
 1. **Single Responsibility**: One diagram = One concept
 2. **Unicode Enhancement**: Always use semantic symbols for clarity
@@ -507,7 +470,7 @@ design-doc-mermaid/
 6. **Load On-Demand**: Only read guides needed for the specific request
 7. **Token Efficiency**: Use hierarchical loading instead of reading everything
 
-## 🎓 Learning Path
+## Learning Path
 
 **New to Mermaid?** Start here:
 1. Read `references/guides/unicode-symbols/guide.md` for symbol meanings
