@@ -1,6 +1,6 @@
 ---
 name: design-doc-mermaid
-description: Create Mermaid diagrams (activity, deployment, sequence, architecture) from text descriptions or source code. Use when asked to "create a diagram", "generate mermaid", "document architecture", "code to diagram", "create design doc", or "convert code to diagram". Supports hierarchical on-demand guide loading, Unicode semantic symbols, and Python utilities for diagram extraction and image conversion.
+description: Create Mermaid diagrams (flowchart, sequence, class, ER, state, C4, architecture) from text or source code. Default for GitHub wiki. Use when asked to create a diagram, generate mermaid, document architecture, or convert code to diagram. PlantUML is only for leftover types. Confluence needs PNG/SVG as well as the fence.
 ---
 
 # Mermaid Architect - Hierarchical Diagram and Documentation Skill
@@ -10,6 +10,7 @@ Mermaid diagram and documentation system with specialized guides and code-to-dia
 ## Table of Contents
 
 - [Decision Tree](#decision-tree)
+- [GitHub wiki, WikiTicket, and Confluence](#github-wiki-wikiticket-and-confluence)
 - [Available Guides and Resources](#available-guides-and-resources)
 - [Usage Patterns](#usage-patterns)
 - [Resilient Workflow](#resilient-workflow)
@@ -42,6 +43,7 @@ flowchart TD
     Analyze -->|"infrastructure, deployment, cloud"| Deploy[Load Deployment Diagram Guide<br/>references/guides/diagrams/deployment-diagrams.md]
     Analyze -->|"system architecture, components"| Arch[Load Architecture Guide<br/>references/guides/diagrams/architecture-diagrams.md]
     Analyze -->|"API flow, interactions"| Sequence[Load Sequence Diagram Guide<br/>references/guides/diagrams/sequence-diagrams.md]
+    Analyze -->|"class, ER, state, wiki, walkthrough"| WikiGuide[Load WikiTicket GitHub Guide<br/>references/guides/wiki-ticket-and-github.md]
     Analyze -->|"code to diagram"| CodeToDiag[Load Code-to-Diagram Guide<br/>references/guides/code-to-diagram/ + examples/]
     Analyze -->|"design document, full docs"| DesignDoc[Load Design Document Template<br/>assets/*-design-template.md]
     Analyze -->|"unicode symbols, icons"| Unicode[Load Unicode Symbols Guide<br/>references/guides/unicode-symbols/guide.md]
@@ -51,6 +53,7 @@ flowchart TD
     Deploy --> Generate
     Arch --> Generate
     Sequence --> Generate
+    WikiGuide --> Generate
     CodeToDiag --> Generate
     DesignDoc --> Generate
     Unicode --> Generate
@@ -67,7 +70,7 @@ flowchart TD
     classDef action fill:#87CEEB,stroke:#333,stroke-width:2px,color:darkblue
 
     class Analyze,Validate decision
-    class Activity,Deploy,Arch,Sequence,CodeToDiag,DesignDoc,Unicode,Scripts guide
+    class Activity,Deploy,Arch,Sequence,WikiGuide,CodeToDiag,DesignDoc,Unicode,Scripts guide
     class Generate,Execute,RunValidation,Output action
 ```
 
@@ -81,6 +84,9 @@ flowchart TD
 | Deployment Diagrams | `references/guides/diagrams/deployment-diagrams.md` | Infrastructure, cloud architecture, K8s, serverless, network topology | "Show AWS architecture", "Document GCP deployment", "Create K8s diagram" |
 | Architecture Diagrams | `references/guides/diagrams/architecture-diagrams.md` | System architecture, component design, high-level structure | "Show system components", "Document microservices", "Architecture overview" |
 | Sequence Diagrams | `references/guides/diagrams/sequence-diagrams.md` | API interactions, service communication, request/response flows | "Show API call sequence", "Document auth flow", "Service interactions" |
+| WikiTicket / GitHub / Confluence | `references/guides/wiki-ticket-and-github.md` | Design docs, walkthroughs, requirements, wiki publish, Confluence images | "architecture doc", "code walkthrough", "wiki", "Confluence" |
+
+Default for WikiTicket and GitHub wiki is this skill, including `classDiagram`, `erDiagram`, and `stateDiagram-v2`. Do not send those to PlantUML. If GitHub fails to render C4 / architecture-beta / block-beta, fall back to `flowchart TD`.
 
 ### Code-to-Diagram Guide & Examples
 
@@ -125,6 +131,19 @@ flowchart TD
 | `extract_mermaid.py` | Extract diagrams from Markdown, validate syntax, replace with images | "extract diagrams", "validate mermaid", "find all diagrams" |
 | `mermaid_to_image.py` | Convert .mmd to PNG/SVG, batch conversion, custom themes | "convert to image", "render diagram", "create PNG" |
 | `resilient_diagram.py` | Full workflow: save .mmd, generate image, validate, error recovery | "generate diagram", "create diagram with validation", "resilient diagram" |
+
+
+## GitHub wiki, WikiTicket, and Confluence
+
+Load `references/guides/wiki-ticket-and-github.md` for WikiTicket design docs,
+code walkthroughs, requirements, GitHub wiki, or Confluence.
+
+| Target | What to ship |
+|--------|----------------|
+| GitHub wiki / GFM | Fenced `mermaid` block. GitHub renders class, ER, state, sequence, flowchart, C4. |
+| Confluence / Notion / Word / PDF | Also render PNG or SVG (`scripts/resilient_diagram.py` or `mmdc`) and upload the image. Do not rely on Confluence to render Mermaid. |
+
+PlantUML is opt-in for Salt wireframes, use case, timing, ArchiMate, nwdiag, and WBS. Those always ship as PNG or SVG.
 
 ## Usage Patterns
 
@@ -448,7 +467,9 @@ design-doc-mermaid/
 | "activity diagram", "workflow", "process flow" | `references/guides/diagrams/activity-diagrams.md` |
 | "deployment", "infrastructure", "cloud", "k8s" | `references/guides/diagrams/deployment-diagrams.md` |
 | "architecture", "system design", "components" | `references/guides/diagrams/architecture-diagrams.md` + design template |
-| "API", "sequence", "interactions", "flow" | `references/mermaid-diagram-guide.md` (sequence section) |
+| "API", "sequence", "interactions", "flow" | `references/guides/diagrams/sequence-diagrams.md` |
+| "class diagram", "ER", "state machine", "wiki", "walkthrough", "architecture doc" | `references/guides/wiki-ticket-and-github.md` plus the matching type guide |
+| "Confluence", "upload image", "PNG", "SVG" | `scripts/resilient_diagram.py` or `scripts/mermaid_to_image.py` |
 | "Spring Boot code" | `examples/spring-boot/` + relevant diagram guides |
 | "FastAPI code", "Python API" | `examples/fastapi/` + relevant diagram guides |
 | "React app", "frontend" | `examples/react/` + architecture guide |
